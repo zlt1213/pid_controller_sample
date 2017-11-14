@@ -36,13 +36,22 @@ class PD_controller:
             # Delta time is zero
             return 0
 
+        error = self.set_point_ - measured_value
 
+        self.last_timestamp_ = timestamp
+        self.error_sum_ += error * delta_time
 
+        delta_error = error - self.last_error_
 
+        self.last_error_ = error
 
+        p = self.kp_ * error
 
+        d = self.kd_ * (delta_error / delta_time)
 
+        u = p + d
 
+        self.u_p.append(p)
+        self.u_d.append(d)
 
-
-        
+        return u
